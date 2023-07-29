@@ -4,23 +4,33 @@ import signIn, { SignFunction } from "@/firebase/auth/signin";
 import { useRouter } from "next/navigation";
 import signUp from "@/firebase/auth/signup";
 import { validateEmail } from "@/utils/validate";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+const handleSign = async (
+  action: SignFunction,
+  email: string,
+  password: string,
+  setError: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+    } | null>
+  >,
+  router: AppRouterInstance
+) => {
+  const { error } = await action(email, password);
+  if (error) {
+    setError(error);
+    return console.error(error);
+  }
 
+  // else successful
+  return router.push("/admin");
+};
 function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<{ message: string } | null>(null);
   const router = useRouter();
 
-  const handleSign = async (action: SignFunction) => {
-    const { result, error } = await action(email, password);
-    if (error) {
-      setError(error);
-      return console.error(error);
-    }
-
-    // else successful
-    return router.push("/admin");
-  };
   const form = [
     {
       htmlFor: "email",
@@ -37,6 +47,9 @@ function Page() {
       type: "password",
     },
   ];
+  const handleClick = (action: SignFunction) => {
+    handleSign(action, email, password, setError, router);
+  };
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl">
@@ -67,7 +80,7 @@ function Page() {
           <div className="mt-6">
             <button
               disabled={!validateEmail(email)}
-              onClick={(e) => handleSign(signIn)}
+              onClick={(e) => handleClick(signIn)}
               className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600"
             >
               Login
@@ -79,7 +92,7 @@ function Page() {
           Don't have an account?
           <button
             disabled={!validateEmail(email) && !password.length}
-            onClick={() => handleSign(signUp)}
+            onClick={() => handleClick(signUp)}
             className="font-medium text-purple-600 hover:underline"
           >
             Sign up
