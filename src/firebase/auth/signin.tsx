@@ -7,6 +7,7 @@ import {
 import { FirebaseError } from "@firebase/util";
 
 const auth = getAuth(firebase_app);
+
 export type SignFunction = (
   email: string,
   password: string
