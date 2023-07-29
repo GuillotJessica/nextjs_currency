@@ -2,6 +2,7 @@
 import React from "react";
 import { useAuthContext, signOut } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import PageDefault from "../../components/container";
 
 function Page() {
   const { user } = useAuthContext();
@@ -11,10 +12,9 @@ function Page() {
   }, [user]);
 
   return (
-    <>
-      <h1>Only logged in users can view this page</h1>
-      <button onClick={() => signOut()}>Signout</button>
-    </>
+    <PageDefault title="Admin">
+      <></>
+    </PageDefault>
   );
 }
 

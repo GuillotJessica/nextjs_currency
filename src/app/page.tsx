@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Container from "../components/container";
 import signIn, { SignFunction } from "@/firebase/auth/signin";
 import { useRouter } from "next/navigation";
 import signUp from "@/firebase/auth/signup";
@@ -51,11 +52,8 @@ function Page() {
     handleSign(action, email, password, setError, router);
   };
   return (
-    <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
-      <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl">
-        <h1 className="text-3xl font-semibold text-center text-purple-700">
-          Sign in
-        </h1>
+    <Container title="Sign In" signOutButton={false}>
+      <>
         <div className="mt-6">
           {form.map(({ htmlFor, text, onChange, type }) => (
             <div key={text} className="mb-2">
@@ -98,8 +96,8 @@ function Page() {
             Sign up
           </button>
         </p>
-      </div>
-    </div>
+      </>
+    </Container>
   );
 }
 
